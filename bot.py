@@ -3,8 +3,8 @@ import os
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
-# ĐẶT TOKEN TRỰC TIẾP Ở ĐÂY - THAY YOUR_BOT_TOKEN bằng token thật
-BOT_TOKEN = "7987929868:AAHN4BFkS9iEnoyoZmDCm5WP9qS5mD4Hki0"  # 👈 THAY TOKEN Ở ĐÂY
+# THAY TOKEN CỦA BẠN VÀO ĐÂY
+BOT_TOKEN = "7987929868:AAHN4BFkS9iEnoyoZmDCm5WP9qS5mD4Hki0"
 
 def parse_input(text):
     # Tách các phần từ input
@@ -174,10 +174,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await update.message.reply_text(f"Có lỗi xảy ra: {str(e)}\nVui lòng kiểm tra lại định dạng dữ liệu.")
 
+async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print(f"Lỗi: {context.error}")
+
 def main():
-    if not BOT_TOKEN or BOT_TOKEN == "YOUR_ACTUAL_BOT_TOKEN_HERE":
+    if not BOT_TOKEN or BOT_TOKEN == "YOUR_BOT_TOKEN_HERE":
         print("Lỗi: Chưa đặt BOT_TOKEN trong code!")
         return
+    
+    print("Đang khởi động bot...")
     
     # Tạo application
     application = Application.builder().token(BOT_TOKEN).build()
@@ -185,6 +190,7 @@ def main():
     # Thêm handlers
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    application.add_error_handler(error_handler)
     
     # Chạy bot
     print("Bot đang chạy...")
