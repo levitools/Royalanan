@@ -140,7 +140,37 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
     except Exception as e:
         await update.message.reply_text(f"Có lỗi xảy ra: {str(e)}\nVui lòng kiểm tra lại định dạng dữ liệu.")
-
+async def clear_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Xóa tất cả tin nhắn trong cuộc trò chuyện"""
+    try:
+        chat_id = update.message.chat_id
+        message_id = update.message.message_id
+        
+        # Xóa tin nhắn lệnh /clear
+        await context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+        
+        # Thông báo đang xóa
+        notice_msg = await update.message.reply_text("🔄 Đang xóa tin nhắn...")
+        
+        # Xóa thông báo sau 2 giây
+        await asyncio.sleep(2)
+        await context.bot.delete_message(chat_id=chat_id, message_id=notice_msg.message_id)
+        
+        # Gửi lại lời mở đầu
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text="Xin chào! Tôi là bot tính toán doanh thu Massage Royal An An.\n\n"
+                 "Hãy gửi dữ liệu theo định dạng:\n"
+                 "14/11 10dacbiet 1super 4vip 13v500 cknv 4600 dack 10100\n\n"
+                 "Công thức tính:\n"
+                 "• Đặc biệt (dacbiet): 1.700.000đ/vé (Gốc: 1.100.000đ, Ngọn: 600.000đ)\n"
+                 "• SuperTT: 700.000đ/vé (Gốc: 400.000đ, Ngọn: 300.000đ)\n"
+                 "• VipTT: 600.000đ/vé (Gốc: 400.000đ, Ngọn: 200.000đ)\n"
+                 "• SuperBT: 500.000đ/vé (Gốc: 500.000đ, Ngọn: 0đ)"
+        )
+        
+    except Exception as e:
+        await update.message.reply_text(f"❌ Không thể xóa tin nhắn: {e}")
 def main():
     if not BOT_TOKEN or BOT_TOKEN == "YOUR_BOT_TOKEN_HERE":
         print("Lỗi: Chưa đặt BOT_TOKEN trong code!")
@@ -151,6 +181,7 @@ def main():
     application = Application.builder().token(BOT_TOKEN).build()
     
     application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("clear", clear_chat))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("Bot đang chạy...")
