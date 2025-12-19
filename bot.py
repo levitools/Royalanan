@@ -4,7 +4,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, CallbackQueryHandler
 
 # THAY TOKEN CỦA BẠN VÀO ĐÂY
-BOT_TOKEN = "7987929868:AAHN4BFkS9iEnoyoZmDCm5WP9qS5mD4Hki0"
+BOT_TOKEN = "7987929868:AAEsLHkOhZEIGXdg4Aw-_lvOTQXClknZGw4"
 
 # Biến tạm lưu dữ liệu user
 user_data = {}
